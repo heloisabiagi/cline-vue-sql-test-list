@@ -6,21 +6,13 @@
     </header>
 
     <main class="main">
-      <section class="form-section">
-        <UserForm
-          :editing-user="editingUser"
-          :loading="loading"
-          @submit="handleSubmit"
-          @cancel="cancelEdit"
-        />
-      </section>
-
       <section class="list-section">
         <UserList
           :users="users"
           :loading="loading"
           @edit="startEdit"
           @delete="removeUser"
+          @add="startAdd"
         />
       </section>
 
@@ -28,6 +20,20 @@
         {{ error }}
       </div>
     </main>
+
+    <!-- User form presented in a modal (used for both create and edit) -->
+    <Modal
+      v-if="modalOpen"
+      :title="editingUser ? 'Edit User' : 'Add User'"
+      @close="closeModal"
+    >
+      <UserForm
+        :editing-user="editingUser"
+        :loading="saving"
+        @submit="handleSubmit"
+        @cancel="closeModal"
+      />
+    </Modal>
   </div>
 </template>
 
@@ -35,6 +41,7 @@
 import { ref, onMounted } from 'vue';
 import UserList from './components/UserList.vue';
 import UserForm from './components/UserForm.vue';
+import Modal from './components/Modal.vue';
 import { fetchUsers, createUser, updateUser, deleteUser } from './api/users';
 
 export default {
@@ -42,11 +49,14 @@ export default {
   components: {
     UserList,
     UserForm,
+    Modal,
   },
   setup() {
     const users = ref([]);
     const editingUser = ref(null);
+    const modalOpen = ref(false);
     const loading = ref(false);
+    const saving = ref(false);
     const error = ref('');
 
     // Load all users from the API
@@ -62,32 +72,34 @@ export default {
       }
     }
 
-    // Add a new user
+    // Add a new user, then close the modal on success
     async function addUser(user) {
-      loading.value = true;
+      saving.value = true;
       error.value = '';
       try {
         await createUser(user);
         await loadUsers();
+        modalOpen.value = false;
       } catch (err) {
         error.value = err.message || 'Failed to create user';
       } finally {
-        loading.value = false;
+        saving.value = false;
       }
     }
 
-    // Update an existing user
+    // Update an existing user, then close the modal on success
     async function editUser(user) {
-      loading.value = true;
+      saving.value = true;
       error.value = '';
       try {
         await updateUser(user.id, user);
         await loadUsers();
+        modalOpen.value = false;
         editingUser.value = null;
       } catch (err) {
         error.value = err.message || 'Failed to update user';
       } finally {
-        loading.value = false;
+        saving.value = false;
       }
     }
 
@@ -106,13 +118,21 @@ export default {
       }
     }
 
-    // Start editing a user (pre-fills the form)
+    // Open the modal in "edit" mode (pre-fills the form)
     function startEdit(user) {
       editingUser.value = { ...user };
+      modalOpen.value = true;
     }
 
-    // Cancel editing
-    function cancelEdit() {
+    // Open the modal in "add" mode
+    function startAdd() {
+      editingUser.value = null;
+      modalOpen.value = true;
+    }
+
+    // Close the modal and reset any pending edit user
+    function closeModal() {
+      modalOpen.value = false;
       editingUser.value = null;
     }
 
@@ -132,13 +152,14 @@ export default {
     return {
       users,
       editingUser,
+      modalOpen,
       loading,
       error,
-      addUser,
-      removeUser,
+      startAdd,
       startEdit,
-      cancelEdit,
+      closeModal,
       handleSubmit,
+      removeUser,
     };
   },
 };
@@ -164,11 +185,10 @@ export default {
   font-size: 0.9rem;
 }
 .main {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
-.form-section,
 .list-section {
   background: #fff;
   border-radius: 8px;
@@ -176,17 +196,15 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 .error-banner {
-  grid-column: 1 / -1;
   background: #e74c3c;
   color: #fff;
   padding: 0.75rem 1rem;
   border-radius: 6px;
   text-align: center;
-  margin-top: 1rem;
 }
 @media (max-width: 768px) {
-  .main {
-    grid-template-columns: 1fr;
+  .app {
+    padding: 1rem;
   }
 }
 </style>

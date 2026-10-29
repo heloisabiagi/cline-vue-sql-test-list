@@ -1,6 +1,16 @@
 <template>
   <div class="list-card">
-    <h2>Users ({{ users.length }})</h2>
+    <div class="list-header">
+      <h2>Users ({{ users.length }})</h2>
+      <button
+        class="btn btn-add"
+        :disabled="loading"
+        @click="$emit('add')"
+        title="Add user"
+      >
+        + Add User
+      </button>
+    </div>
 
     <div v-if="loading" class="loading">Loading users...</div>
 
@@ -64,7 +74,7 @@ export default {
       default: false,
     },
   },
-  emits: ['edit', 'delete'],
+  emits: ['edit', 'delete', 'add'],
   setup() {
     function formatDate(dateStr) {
       if (!dateStr) return '';
@@ -84,12 +94,29 @@ export default {
 .list-card {
   width: 100%;
 }
-.list-card h2 {
-  font-size: 1.3rem;
-  color: #2c3e50;
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 1rem;
   border-bottom: 2px solid #ecf0f1;
   padding-bottom: 0.5rem;
+}
+.list-header h2 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin: 0;
+}
+.btn-add {
+  background-color: #3498db;
+  color: #fff;
+}
+.btn-add:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+.btn-add:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
 }
 .loading,
 .empty {
