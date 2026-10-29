@@ -1,7 +1,5 @@
 <template>
   <div class="form-card">
-    <h2>{{ editingUser ? 'Edit User' : 'Add New User' }}</h2>
-
     <form @submit.prevent="onSubmit" class="user-form">
       <div class="field">
         <label for="name">Name *</label>
@@ -45,7 +43,6 @@
           <span v-else>{{ editingUser ? 'Update' : 'Create' }}</span>
         </button>
         <button
-          v-if="editingUser"
           type="button"
           @click="onCancel"
           :disabled="loading"
@@ -124,13 +121,6 @@ export default {
 <style scoped>
 .form-card {
   width: 100%;
-}
-.form-card h2 {
-  font-size: 1.3rem;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 0.5rem;
 }
 .user-form {
   display: flex;
