@@ -1,17 +1,25 @@
 # Creating a User listing AI app with different agents
 This project is part of my experimentation with AI Agents (Copilot, Claude, Cline etc) creating a simple RESTful Users list with Vue.js, Unit tests and some pre-commit hooks. It demonstrates a minimal Express REST API with a Vue frontend that stores users in a local SQLite database.
 
-In this specific repository, I'll be using Cline (with Laguna S 2.1 Free), free plan.
+In this specific repository, I'll be using Cline (with model Laguna S 2.1 Free), free plan.
 
 This project is loosely based on this [YouTube video tutorial](https://www.youtube.com/watch?v=wlpBCazAY9Q&t=377s), but I'm adding my personal preferences.
 
+## Development status
+
+### Log 1: Scaffolding with Cline and moving user form to a modal
+
+- I reused the same prompt from the projects with Claude and Copilot (`Create a full REST API with Express that saves users to a local SQLite database. Use Vue.js as frontend framework`), as I wanted to understand what it would come up with without a lot of specification or guidance. It's notably much slower than Copilot and Claude, with plenty of lost connections issues with Laguna S 2.1.
+
 --------------------
 
-# Vue SQLite Test List
+Note: documentation provided by Cline
+
+## Vue SQLite Test List
 
 A full-stack **REST API** built with **Express** + **SQLite** (backend) and **Vue.js 3** + **Vite** (frontend) for user management.
 
-## Features
+### Features
 
 - **REST API** with full CRUD operations:
   - `GET /api/users` — Get all users
@@ -25,7 +33,7 @@ A full-stack **REST API** built with **Express** + **SQLite** (backend) and **Vu
 - **Vite** dev server with API proxy to the backend
 - Input validation and error handling (400 / 404 / 409)
 
-## Project Structure
+### Project Structure
 
 ```
 cline-vue-sql-test-list/
@@ -54,14 +62,14 @@ cline-vue-sql-test-list/
 └── README.md
 ```
 
-## Getting Started
+### Getting Started
 
-### Prerequisites
+#### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18+ recommended)
 - [npm](https://docs.npmjs.com/downloading-npm) (bundled with Node.js)
 
-### Installation
+#### Installation
 
 ```bash
 # Clone the repository
@@ -79,11 +87,11 @@ npm install
 cd ..
 ```
 
-### Running the Application
+#### Running the Application
 
 You can run each server independently or use the root scripts.
 
-#### Option 1: Run individually
+##### Option 1: Run individually
 
 ```bash
 # Terminal 1 — Backend (Express on http://localhost:3000)
@@ -95,7 +103,7 @@ cd frontend
 npm run dev
 ```
 
-#### Option 2: Concurrent (requires `concurrently` at root)
+##### Option 2: Concurrent (requires `concurrently` at root)
 
 ```bash
 npm run dev
@@ -103,7 +111,7 @@ npm run dev
 
 Once both servers are running, open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## API Endpoints
+### API Endpoints
 
 All endpoints are prefixed with `/api/users`.
 
@@ -115,7 +123,7 @@ All endpoints are prefixed with `/api/users`.
 | PUT      | `/api/users/:id` | Update a user by ID    | `{name, email, age}`        | `200` — `{...}`  |
 | DELETE   | `/api/users/:id` | Delete a user by ID    | —                           | `200` — `{message}` |
 
-### User Object
+#### User Object
 
 ```json
 {
@@ -128,7 +136,7 @@ All endpoints are prefixed with `/api/users`.
 }
 ```
 
-### Error Responses
+#### Error Responses
 
 | Status | Condition                            |
 |--------|--------------------------------------|
@@ -137,7 +145,7 @@ All endpoints are prefixed with `/api/users`.
 | 409    | Email already exists (unique constraint) |
 | 500    | Internal server error                |
 
-## Database
+### Database
 
 The SQLite database file (`users.db`) is automatically created in the `database/` folder on the first server start. The schema is initialized automatically:
 
@@ -152,7 +160,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 ```
 
-## Frontend
+### Frontend
 
 The Vue.js frontend provides a clean, responsive UI:
 
