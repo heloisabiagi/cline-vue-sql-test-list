@@ -11,6 +11,8 @@ This project is loosely based on this [YouTube video tutorial](https://www.youtu
 
 - I reused the same prompt from the projects with Claude and Copilot (`Create a full REST API with Express that saves users to a local SQLite database. Use Vue.js as frontend framework`), as I wanted to understand what it would come up with without a lot of specification or guidance. It's notably much slower than Copilot and Claude, with plenty of lost connections issues with Laguna S 2.1.
 - The initial frontend output results are better than Copilot's: backend and frontend applications being served in different ports, creation of actual components (as opposed to Copilot, that delivered all the application code in a single file) and scoped styling in the components (as opposed to Copilot, that delivered all the styling in a single file). These results are similar to Claude's scaffolding output. The things Claude handed better: it has proper Javascript validation in the form fields (Cline and Copilot are solely relying on the HTML validation) and the application has a more refined look, with better styling of buttons and fields.
+- I've managed to move the User Form to a modal with a single prompt. The main issue was, again, lost connections to Laguna S 2.1 and its very low latency.
+- For the next tasks, I'll switch to a local LLM. Still evaluating the possibilities, the strongest candidate so far seems Qwen3-Coder.
 
 --------------------
 
